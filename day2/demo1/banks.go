@@ -8,7 +8,7 @@ import (
 
 type Banks struct {
 	users map[string]*User // 用户必须采用指针 这样才能保证我们修改和访问的数据都是同一块内存
-	logUser string //保存当前登录的用户名
+	logUser string         //保存当前登录的用户名
 	mu sync.Mutex
 }
 var Bank *Banks // 全局函数 未初始化
@@ -26,9 +26,6 @@ func NewBanks() *Banks {
 
 //添加用户
 func (b *Banks) AddUser(username string,password string) error{
-	if b.logUser == ""{
-		return errors.New("未登录系统")
-	}
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
@@ -47,10 +44,10 @@ func (b *Banks)Login(username string,password string) error{
 	defer b.mu.Unlock()
 	user,ex := b.users[username]
 	if !ex {
-		errors.New("该用户不存在")
+		return errors.New("该用户不存在")
 	}
 	if !user.CheckPassword(password) {
-		errors.New("密码不正确")
+		return errors.New("密码不正确")
 	}
 	b.logUser=username
 	return nil
@@ -70,7 +67,7 @@ func (b *Banks) ObtainingBalance() (float32,error) {
 //存款
 func (b *Banks) Deposit(money float32) error {
 	if b.logUser=="" {
-		errors.New("未登录系统")
+		return errors.New("未登录系统")
 	}
 	b.mu.Lock()
 	defer b.mu.Unlock()
@@ -85,10 +82,11 @@ func (b *Banks)Withdrawals(money float32) error  {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 	if !b.users[b.logUser].Withdrawals(money) {
-		fmt.Errorf("%s","余额不足")
+		return fmt.Errorf("%s","余额不足")
 	}
 	return nil
 }
+
 
 //// i>10
 //func add(i int) (int, error) {

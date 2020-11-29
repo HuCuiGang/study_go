@@ -11,7 +11,7 @@ type User struct {
 
 	mu sync.Mutex
 }
-func NewUser(username string,password string) *User{
+func NewUser(username string,password string) *User {
 	return &User{
 		username: username,
 		password: password,
