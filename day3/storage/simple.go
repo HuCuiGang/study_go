@@ -7,7 +7,7 @@ import (
 )
 
 type Simple struct {
-	mu sync.Locker
+	mu sync.Mutex
 	db map[string]*user.BankAccount
 }
 
